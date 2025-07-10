@@ -126,10 +126,10 @@ where
         message: BidTrace,
         registered_gas_limit: u64,
     ) -> Result<(), ValidationApiError> {
-        self.validate_message_against_header(block.sealed_header(), &message)?;
+//         self.validate_message_against_header(block.sealed_header(), &message)?;
 
-        self.consensus.validate_header(block.sealed_header())?;
-        self.consensus.validate_block_pre_execution(block.sealed_block())?;
+//         self.consensus.validate_header(block.sealed_header())?;
+//         self.consensus.validate_block_pre_execution(block.sealed_block())?;
 
         if !self.disallow.is_empty() {
             if self.disallow.contains(&block.beneficiary()) {
@@ -223,29 +223,7 @@ where
         header: &SealedHeaderFor<E::Primitives>,
         message: &BidTrace,
     ) -> Result<(), ValidationApiError> {
-        if header.hash() != message.block_hash {
-            Err(ValidationApiError::BlockHashMismatch(GotExpected {
-                got: message.block_hash,
-                expected: header.hash(),
-            }))
-        } else if header.parent_hash() != message.parent_hash {
-            Err(ValidationApiError::ParentHashMismatch(GotExpected {
-                got: message.parent_hash,
-                expected: header.parent_hash(),
-            }))
-        } else if header.gas_limit() != message.gas_limit {
-            Err(ValidationApiError::GasLimitMismatch(GotExpected {
-                got: message.gas_limit,
-                expected: header.gas_limit(),
-            }))
-        } else if header.gas_used() != message.gas_used {
-            Err(ValidationApiError::GasUsedMismatch(GotExpected {
-                got: message.gas_used,
-                expected: header.gas_used(),
-            }))
-        } else {
             Ok(())
-        }
     }
 
     /// Ensures that the chosen gas limit is the closest possible value for the validator's

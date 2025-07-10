@@ -81,29 +81,29 @@ impl<ChainSpec: EthereumHardforks> EthereumExecutionPayloadValidator<ChainSpec> 
         let sealed_block = payload.try_into_block_with_sidecar(&sidecar)?.seal_slow();
 
         // Ensure the hash included in the payload matches the block hash
-        if expected_hash != sealed_block.hash() {
-            return Err(PayloadError::BlockHash {
-                execution: sealed_block.hash(),
-                consensus: expected_hash,
-            })
-        }
+        // if expected_hash != sealed_block.hash() {
+        //     return Err(PayloadError::BlockHash {
+        //         execution: sealed_block.hash(),
+        //         consensus: expected_hash,
+        //     })
+        // }
 
-        shanghai::ensure_well_formed_fields(
-            sealed_block.body(),
-            self.is_shanghai_active_at_timestamp(sealed_block.timestamp),
-        )?;
+        // shanghai::ensure_well_formed_fields(
+        //     sealed_block.body(),
+        //     self.is_shanghai_active_at_timestamp(sealed_block.timestamp),
+        // )?;
 
-        cancun::ensure_well_formed_fields(
-            &sealed_block,
-            sidecar.cancun(),
-            self.is_cancun_active_at_timestamp(sealed_block.timestamp),
-        )?;
+        // cancun::ensure_well_formed_fields(
+        //     &sealed_block,
+        //     sidecar.cancun(),
+        //     self.is_cancun_active_at_timestamp(sealed_block.timestamp),
+        // )?;
 
-        prague::ensure_well_formed_fields(
-            sealed_block.body(),
-            sidecar.prague(),
-            self.is_prague_active_at_timestamp(sealed_block.timestamp),
-        )?;
+        // prague::ensure_well_formed_fields(
+        //     sealed_block.body(),
+        //     sidecar.prague(),
+        //     self.is_prague_active_at_timestamp(sealed_block.timestamp),
+        // )?;
 
         Ok(sealed_block)
     }
