@@ -116,17 +116,28 @@ async fn main() -> Result<()> {
     
     // 4. 构造 PayloadAttributes - 告诉节点如何构建新区块
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
+    
+    // 🎯 重要：设置手续费接收者地址（决定谁获得区块奖励）
+    // 在实际环境中，这应该是验证者的地址
+    let fee_recipient = Address::ZERO; // 默认销毁奖励
+    // 如果你想获得奖励，可以替换为你的地址，例如：
+    // let fee_recipient: Address = "0x742d35Cc8F3fE5e7e3F44A3e4D4e8e2e9d9F0C8A".parse()?;
+    
     let payload_attributes = PayloadAttributes {
         timestamp,
         prev_randao: B256::ZERO, // 在开发环境中使用零值
-        suggested_fee_recipient: Address::ZERO, // 手续费接收地址
+        suggested_fee_recipient: fee_recipient, // 👈 区块奖励接收者
         withdrawals: Some(vec![]), // 空提款列表
         parent_beacon_block_root: Some(B256::ZERO), // Post-Cancun 需要提供这个字段
     };
     
     println!("🔧 构造载荷属性:");
     println!("  - 时间戳: {}", timestamp);
-    println!("  - 建议的手续费接收者: 0x0000000000000000000000000000000000000000");
+    println!("  - 手续费接收者: 0x{} 👈 这个地址将获得所有区块奖励！", hex::encode(fee_recipient.as_slice()));
+    if fee_recipient == Address::ZERO {
+        println!("  ⚠️  当前设置为零地址，奖励将被销毁");
+        println!("  💡 要获得奖励，请修改代码中的 fee_recipient 变量");
+    }
     
     // 5. 调用 engine_forkchoiceUpdated 请求构建载荷
     println!("\n📤 步骤 1: 调用 engine_forkchoiceUpdated 请求构建载荷...");
