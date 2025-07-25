@@ -153,6 +153,63 @@ cargo run --bin reth -- node --dev --http --authrpc.port 8551
 cargo run -p <example-name>
 ```
 
+### 🔄 重新配置开发节点 (Reconfiguring Development Node)
+
+如果你修改了创世块配置文件 `crates/chainspec/res/genesis/dev.json`，需要重新初始化区块链数据：
+
+#### 当你修改了 dev.json 配置后：
+
+**步骤 1：停止当前节点**
+```bash
+# 如果节点正在运行，按 Ctrl+C 停止，或者：
+pkill -f "reth node"
+```
+
+**步骤 2：清除旧数据**
+```bash
+# 删除旧的区块链数据（重要：创世块变更后必须清除）
+rm -rf ./data
+```
+
+**步骤 3：重新启动节点**
+```bash
+# 使用你的命令重新启动（会自动重新初始化）
+reth node \
+  --datadir ./data \
+  --chain dev \
+  --authrpc.jwtsecret ./jwt.hex \
+  --authrpc.addr 127.0.0.1 \
+  --authrpc.port 8551 \
+  --http \
+  --ws \
+  --rpc-max-connections 429496729 \
+  --http.api txpool,trace,web3,eth,debug \
+  --ws.api trace,web3,eth,debug
+```
+
+#### ⚠️ 重要说明：
+
+- **为什么要删除数据目录？** 修改 `dev.json` 会改变创世块的哈希，旧的区块链数据与新配置不兼容
+- **JWT 文件：** 确保 `jwt.hex` 文件存在，如果没有请创建：
+  ```bash
+  echo "0x$(openssl rand -hex 32)" > jwt.hex
+  ```
+- **配置变更：** 常见的 `dev.json` 修改包括：
+  - 修改 `chainId`
+  - 调整预分配账户余额 (`alloc` 字段)
+  - 更改硬分叉激活时间
+  - 修改初始gas限制
+
+#### 🔍 验证节点重启成功：
+```bash
+# 检查节点是否正常运行
+curl -X POST -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+  http://localhost:8545
+
+# 应该返回你在 dev.json 中设置的 chainId（如 1337）
+```
+
 ### Authentication Notes
 - **Engine API examples** require JWT authentication
 - **RPC examples** work with standard HTTP/WS endpoints
