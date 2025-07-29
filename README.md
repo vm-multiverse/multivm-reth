@@ -207,7 +207,7 @@ curl -X POST -H "Content-Type: application/json" \
   --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
   http://localhost:8545
 
-# 应该返回你在 dev.json 中设置的 chainId（如 1337）
+# 应该返回你在 de2.json 中设置的 chainId（如 1337）
 ```
 
 ### Authentication Notes
