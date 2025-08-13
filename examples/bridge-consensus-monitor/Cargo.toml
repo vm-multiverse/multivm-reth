@@ -1,0 +1,21 @@
+[package]
+name = "bridge-consensus-monitor"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { workspace = true, features = ["full"] }
+ethers = "2.0"
+eyre = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+hex = "0.4"
+alloy-primitives = { workspace = true }
+alloy-sol-types = { workspace = true }
+reth-primitives = { workspace = true }
+reth-rpc-eth-types = { workspace = true }
+reth-provider = { workspace = true }
+
+[[bin]]
+name = "bridge-monitor"
+path = "src/main.rs"

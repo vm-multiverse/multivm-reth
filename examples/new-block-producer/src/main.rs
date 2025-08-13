@@ -427,7 +427,7 @@ async fn main() -> Result<()> {
                 println!("\n📊 余额变化总结:");
                 println!("   初始: {} ETH", initial_wei as f64 / 1e18);
                 println!("   最终: {} ETH", final_balance_eth);
-                println!("   变化: {} ETH", if change_wei >= 0 { "+" } else { "" }, change_eth);
+                println!("   变化: {}{} ETH", if change_wei >= 0 { "+" } else { "" }, change_eth);
                 
                 if change_wei == 1_000_000_000_000_000_000 {
                     println!("   ✅ 正好增加了 1 ETH！提款成功！");
